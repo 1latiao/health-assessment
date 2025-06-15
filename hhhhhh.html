@@ -1,0 +1,3136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健康检测中心</title>
+    <style>
+        /* 全局样式 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* 睡眠测评特定样式 */
+.question-group {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #4CAF50;
+}
+
+.question-group h3 {
+    color: #2E7D32;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+/* 时间输入框样式 */
+input[type="time"] {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+}
+/* 运动评估特定样式 */
+.input-with-unit {
+    display: flex;
+    align-items: center;
+}
+
+.input-with-unit input {
+    width: 80%;
+    margin-right: 10px;
+}
+
+.input-with-unit span {
+    white-space: nowrap;
+    color: #666;
+}
+
+/* 运动建议卡片 */
+.fitness-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-left: 4px solid #4CAF50;
+}
+
+.fitness-card h4 {
+    color: #2E7D32;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+/* 运动强度指示器 */
+.intensity-meter {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.intensity-meter-fill {
+    height: 100%;
+    background: linear-gradient(to right, #4CAF50, #FFC107, #F44336);
+    border-radius: 5px;
+}
+/* 心理健康评估特定样式 */
+.warning-box {
+    border-left: 4px solid #f44336;
+    background-color: #ffebee;
+}
+
+.mental-health-scale {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f5f5f5;
+}
+
+.scale-meter {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.scale-meter-fill {
+    height: 100%;
+    border-radius: 5px;
+}
+
+.depression-fill {
+    background: #2196F3; /* 蓝色 */
+}
+
+.anxiety-fill {
+    background: #FF9800; /* 橙色 */
+}
+
+.stress-fill {
+    background: #4CAF50; /* 绿色 */
+}
+
+.coping-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.coping-card h4 {
+    color: #333;
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+/* 饮食评估特定样式 */
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+}
+
+.checkbox-group input {
+    margin-right: 8px;
+    width: auto;
+}
+
+.nutrition-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nutrition-card h4 {
+    color: #2E7D32;
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.nutrition-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4CAF50;
+    margin: 10px 0;
+}
+
+.nutrition-meter {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.nutrition-meter-fill {
+    height: 100%;
+    background: linear-gradient(to right, #F44336, #FFC107, #4CAF50);
+    border-radius: 5px;
+}
+
+.food-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.food-item {
+    background: #E8F5E9;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.food-item.recommended {
+    background: #C8E6C9;
+    font-weight: bold;
+}
+
+.food-item.limited {
+    background: #FFEBEE;
+}
+
+
+/* 历史记录页面样式 */
+.report-item {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  border-left: 4px solid #4CAF50;
+  transition: transform 0.3s ease;
+}
+
+.report-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.report-title {
+  color: #2E7D32;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.report-score {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.report-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.detail-item {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.detail-value {
+  font-weight: 500;
+}
+
+/* 导出按钮美化 */
+.export-btn {
+  background: linear-gradient(to right, #2196F3, #0D47A1);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+}
+
+.export-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
+}
+
+/* 空状态提示 */
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+  color: #666;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #e0e0e0;
+  margin-bottom: 15px;
+}
+
+
+
+
+
+        /* 导航样式 */
+        nav {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-size: 1.1rem;
+            padding: 8px 16px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 页面容器 */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        h1 {
+            color: #2E7D32;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #4CAF50, #81C784);
+            border-radius: 2px;
+        }
+
+        h2 {
+            color: #388E3C;
+            margin-bottom: 1rem;
+        }
+
+        /* 输入组样式 */
+        .input-group {
+            margin-bottom: 1.8rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.9rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        button {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 1.1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* 结果样式 */
+        .result {
+            margin-top: 1.8rem;
+            padding: 1.5rem;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result h2 {
+            margin-top: 0;
+        }
+
+        /* 参考标准 */
+        .reference, .bmi-scale {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #e8f4ff;
+            border-radius: 10px;
+            border-left: 4px solid #2196F3;
+        }
+
+        /* 建议部分 */
+        .advice-section {
+            margin-top: 1.5rem;
+        }
+
+        .exercise-advice {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .diet-advice {
+            background: #f0f4c3;
+            border-left: 4px solid #CDDC39;
+            padding: 1.2rem;
+            border-radius: 8px;
+        }
+
+        .sleep-advice {
+            background: #e1f5fe;
+            border-left: 4px solid #03A9F4;
+            padding: 1.2rem;
+            border-radius: 8px;
+        }
+
+        .mental-advice {
+            background: #f3e5f5;
+            border-left: 4px solid #9C27B0;
+            padding: 1.2rem;
+            border-radius: 8px;
+        }
+
+        .warning {
+            color: #d32f2f;
+            font-weight: bold;
+            margin: 1.2rem 0;
+            padding: 1rem;
+            background: #ffebee;
+            border-radius: 8px;
+            border-left: 4px solid #d32f2f;
+        }
+
+        ul {
+            padding-left: 1.8rem;
+            margin: 0.8rem 0;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* 主页样式 */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: #2E7D32;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: #4CAF50;
+        }
+
+        .feature-card h3 {
+            color: #2E7D32;
+            margin-bottom: 1rem;
+        }
+
+        /* 进度条 */
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        /* 问题样式 */
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-left: 3px solid #4CAF50;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                margin: 5px;
+                font-size: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav>
+            <a href="#" class="nav-link active" data-page="home">首页</a>
+            <a href="#" class="nav-link" data-page="blood-sugar">血糖检测</a>
+            <a href="#" class="nav-link" data-page="bmi">BMI计算</a>
+            <a href="#" class="nav-link" data-page="sleep">睡眠质量</a>
+            <a href="#" class="nav-link" data-page="exercise">运动水平</a>
+            <a href="#" class="nav-link" data-page="diet">饮食健康</a>
+            <a href="#" class="nav-link" data-page="mental">心理健康</a>
+            <a href="#" class="nav-link" data-page="history">历史记录</a>
+             <a href="#" class="nav-link" data-page="summary">综合评级</a>
+        </nav>
+
+        <!-- 首页内容 -->
+        <div id="home" class="page active">
+            <div class="hero">
+                <h1>健康检测中心</h1>
+                <p>专业的健康检测工具，助您了解身体状况，获取个性化健康建议</p>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🩸</div>
+                    <h3>血糖检测</h3>
+                    <p>精准检测您的血糖水平，根据结果提供饮食和运动建议</p>
+                    <button class="goto-btn" data-page="blood-sugar">开始检测</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚖️</div>
+                    <h3>BMI计算</h3>
+                    <p>计算身体质量指数，评估体重状况，获取个性化健康方案</p>
+                    <button class="goto-btn" data-page="bmi">开始计算</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌙</div>
+                    <h3>睡眠质量</h3>
+                    <p>评估您的睡眠状况，获取改善睡眠的专业建议</p>
+                    <button class="goto-btn" data-page="sleep">开始测评</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🏃</div>
+                    <h3>运动水平</h3>
+                    <p>分析您的运动习惯，制定个性化运动计划</p>
+                    <button class="goto-btn" data-page="exercise">开始评估</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🍎</div>
+                    <h3>饮食健康</h3>
+                    <p>评估您的饮食习惯，提供科学营养建议</p>
+                    <button class="goto-btn" data-page="diet">开始分析</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>心理健康</h3>
+                    <p>评估心理状态，提供情绪管理建议</p>
+                    <button class="goto-btn" data-page="mental">开始测评</button>
+                </div>
+            </div>
+        </div>
+
+
+
+<!-- 历史记录页面 -->
+<div id="history" class="page">
+  <div class="card">
+    <h1>健康测评历史记录</h1>
+    <div id="reports-list">
+      <!-- 报告将通过JS动态添加 -->
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+      <button class="export-btn" onclick="exportData()">
+        <i class="fas fa-download"></i> 导出所有数据
+      </button>
+        <button class="export-btn" style="background: #2196F3;" onclick="submitData()">
+        <i class="fas fa-cloud-upload-alt"></i> 提交数据
+      </button>
+      <p>提交数据即表示您同意将匿名健康数据用于研究目的</p>    </div>
+  </div>
+</div>
+
+
+<!-- 综合评级页面 -->
+<div id="summary" class="page">
+  <div class="card">
+    <h1>健康综合评级</h1>
+    <div id="overall-rating">
+      <!-- 内容将通过JS动态生成 -->
+    </div>
+
+    <div class="progress-container" style="margin: 30px 0;">
+      <div id="overall-progress" class="progress-bar"></div>
+    </div>
+
+    <div id="category-scores">
+      <!-- 各分类评分将通过JS动态生成 -->
+    </div>
+
+    <div class="advice-section" id="summary-advice"></div>
+      <div class="advice-section" id="improvement-advice" style="margin-top: 30px;"></div>
+  </div>
+</div>
+
+
+        <!-- 血糖检测页面 -->
+        <div id="blood-sugar" class="page">
+            <div class="card">
+                <h1>血糖检测工具</h1>
+
+                <div class="input-group">
+                    <label for="bloodSugar">血糖值（mmol/L）</label>
+                    <input type="number" step="0.1" id="bloodSugar" placeholder="请输入血糖值">
+                </div>
+
+                <div class="input-group">
+                    <label for="measureTime">测量时间</label>
+                    <select id="measureTime">
+                        <option value="fasting">空腹</option>
+                        <option value="afterMeal">餐后2小时</option>
+                    </select>
+                </div>
+
+                <button onclick="checkSugar()">立即检测</button>
+
+                <div id="sugar-result" class="result"></div>
+
+                <div class="reference">
+                    <h3>参考标准</h3>
+                    <p>空腹血糖：3.9-6.1 mmol/L</p>
+                    <p>餐后血糖：&lt;7.8 mmol/L</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BMI检测页面 -->
+        <div id="bmi" class="page">
+            <div class="card">
+                <h1>BMI健康计算器</h1>
+
+                <div class="input-group">
+                    <label for="height">身高（厘米）</label>
+                    <input type="number" id="height" placeholder="请输入身高" min="1">
+                </div>
+
+                <div class="input-group">
+                    <label for="weight">体重（公斤）</label>
+                    <input type="number" id="weight" placeholder="请输入体重" min="1">
+                </div>
+
+                <div class="input-group">
+                    <label for="age">年龄</label>
+                    <input type="number" id="age" min="10" max="100" placeholder="请输入年龄">
+                </div>
+
+                <div class="input-group">
+                    <label for="occupation">职业类型</label>
+                    <select id="occupation">
+                        <option value="sedentary">久坐上班族</option>
+                        <option value="physical">体力劳动者</option>
+                        <option value="sports">体育从业者</option>
+                    </select>
+                </div>
+
+                <button onclick="calculateBMI()">立即计算</button>
+
+                <div id="bmi-result" class="result"></div>
+
+                <div class="bmi-scale">
+                    <h3>BMI分类标准</h3>
+                    <p>偏瘦 &lt; 18.5 | 正常 18.5-24 | 过重 24-28 | 肥胖 ≥28</p>
+                </div>
+            </div>
+        </div>
+
+<!-- 睡眠质量页面 -->
+<div id="sleep" class="page">
+    <div class="card">
+        <h1>🌙 匹兹堡睡眠质量指数(PSQI)测评</h1>
+        <p>请根据过去1个月的实际情况回答以下问题：</p>
+
+        <form id="sleepForm">
+            <!-- 组成部分1：主观睡眠质量 -->
+            <div class="question-group">
+                <h3>1. 总体睡眠质量评价</h3>
+                <div class="question">
+                    <label>您如何评价过去1个月的睡眠质量？</label>
+                    <select name="q1">
+                        <option value="0">非常好</option>
+                        <option value="1">较好</option>
+                        <option value="2">较差</option>
+                        <option value="3">非常差</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 组成部分2：睡眠潜伏期 -->
+            <div class="question-group">
+                <h3>2. 入睡时间</h3>
+                <div class="question">
+                    <label>过去1个月，您通常需要多长时间才能入睡？</label>
+                    <select name="q2">
+                        <option value="0">≤15分钟</option>
+                        <option value="1">16-30分钟</option>
+                        <option value="2">31-60分钟</option>
+                        <option value="3">>60分钟</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>过去1个月，您是否很难在30分钟内入睡？</label>
+                    <select name="q3">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 组成部分3：睡眠持续时间 -->
+            <div class="question-group">
+                <h3>3. 睡眠时间</h3>
+                <div class="question">
+                    <label>过去1个月，您每晚实际睡眠时间是多少？</label>
+                    <select name="q4">
+                        <option value="0">>7小时</option>
+                        <option value="1">6-7小时</option>
+                        <option value="2">5-6小时</option>
+                        <option value="3"><5小时</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 组成部分4：睡眠效率 -->
+            <div class="question-group">
+                <h3>4. 睡眠效率（计算用）</h3>
+                <div class="question">
+                    <label>通常您几点上床睡觉？</label>
+                    <input type="time" name="bedtime">
+                </div>
+                <div class="question">
+                    <label>通常您几点起床？</label>
+                    <input type="time" name="waketime">
+                </div>
+            </div>
+
+            <!-- 组成部分5：睡眠障碍 -->
+            <div class="question-group">
+                <h3>5. 睡眠障碍</h3>
+                <div class="question">
+                    <label>过去1个月，您是否因以下问题影响睡眠：</label>
+                </div>
+                <div class="question">
+                    <label>a. 夜间易醒或早醒</label>
+                    <select name="q5a">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>b. 夜间起床上厕所</label>
+                    <select name="q5b">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>c. 呼吸不畅</label>
+                    <select name="q5c">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>d. 咳嗽或打鼾</label>
+                    <select name="q5d">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>e. 感觉冷</label>
+                    <select name="q5e">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>f. 感觉热</label>
+                    <select name="q5f">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>g. 做噩梦</label>
+                    <select name="q5g">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>h. 疼痛不适</label>
+                    <select name="q5h">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 组成部分6：催眠药物使用 -->
+            <div class="question-group">
+                <h3>6. 催眠药物使用</h3>
+                <div class="question">
+                    <label>过去1个月，您是否使用药物帮助睡眠？</label>
+                    <select name="q6">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 组成部分7：日间功能障碍 -->
+            <div class="question-group">
+                <h3>7. 日间功能障碍</h3>
+                <div class="question">
+                    <label>过去1个月，您是否难以保持清醒状态？</label>
+                    <select name="q7a">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>过去1个月，您是否精力不足？</label>
+                    <select name="q7b">
+                        <option value="0">无</option>
+                        <option value="1">每周<1次</option>
+                        <option value="2">每周1-2次</option>
+                        <option value="3">每周≥3次</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" onclick="calculatePSQI()">查看分析</button>
+        </form>
+
+        <div id="sleepResult" class="result"></div>
+    </div>
+</div>
+<!-- 饮食健康页面 -->
+<div id="diet" class="page">
+    <div class="card">
+        <h1>🍎 饮食健康评估</h1>
+        <p>请根据您<strong>最近一周</strong>的饮食习惯回答以下问题：</p>
+
+        <form id="dietForm">
+            <!-- 基本信息 -->
+            <div class="question-group">
+                <h3>1. 基本信息</h3>
+                <div class="question">
+                    <label>身高(cm)</label>
+                    <input type="number" name="height" min="120" max="250">
+                </div>
+                <div class="question">
+                    <label>体重(kg)</label>
+                    <input type="number" name="weight" min="30" max="200">
+                </div>
+                <div class="question">
+                    <label>年龄</label>
+                    <input type="number" name="age" min="18" max="100">
+                </div>
+                <div class="question">
+                    <label>性别</label>
+                    <select name="gender">
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>日常活动水平</label>
+                    <select name="activity">
+                        <option value="sedentary">久坐(办公室工作)</option>
+                        <option value="light">轻度活动(每周1-2次运动)</option>
+                        <option value="moderate">中度活动(每周3-5次运动)</option>
+                        <option value="active">高度活跃(体力劳动或每天运动)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 饮食多样性评估 -->
+            <div class="question-group">
+                <h3>2. 饮食多样性</h3>
+                <p>过去一周，您是否经常食用以下食物？</p>
+
+                <div class="question">
+                    <label>全谷物(糙米、全麦面包等)</label>
+                    <select name="wholeGrain">
+                        <option value="0">几乎不吃</option>
+                        <option value="1">每周1-2次</option>
+                        <option value="2">每周3-5次</option>
+                        <option value="3">每天1次以上</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>深色蔬菜(菠菜、西兰花等)</label>
+                    <select name="vegetables">
+                        <option value="0">几乎不吃</option>
+                        <option value="1">每周1-2次</option>
+                        <option value="2">每周3-5次</option>
+                        <option value="3">每天1次以上</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>水果</label>
+                    <select name="fruits">
+                        <option value="0">几乎不吃</option>
+                        <option value="1">每周1-2次</option>
+                        <option value="2">每周3-5次</option>
+                        <option value="3">每天1次以上</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>奶制品(牛奶、酸奶等)</label>
+                    <select name="dairy">
+                        <option value="0">几乎不吃</option>
+                        <option value="1">每周1-2次</option>
+                        <option value="2">每周3-5次</option>
+                        <option value="3">每天1次以上</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>优质蛋白(鱼、豆、蛋、瘦肉)</label>
+                    <select name="protein">
+                        <option value="0">几乎不吃</option>
+                        <option value="1">每周1-2次</option>
+                        <option value="2">每周3-5次</option>
+                        <option value="3">每天1次以上</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 饮食习惯评估 -->
+            <div class="question-group">
+                <h3>3. 饮食习惯</h3>
+
+                <div class="question">
+                    <label>您每天吃几餐？</label>
+                    <select name="mealsPerDay">
+                        <option value="1">1-2餐</option>
+                        <option value="2">3餐</option>
+                        <option value="3">3餐+1-2次加餐</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>早餐通常包含哪些？(可多选)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="breakfast" value="protein"> 蛋白质(蛋/奶/豆)</label>
+                        <label><input type="checkbox" name="breakfast" value="wholeGrain"> 全谷物</label>
+                        <label><input type="checkbox" name="breakfast" value="fruit"> 水果</label>
+                        <label><input type="checkbox" name="breakfast" value="vegetable"> 蔬菜</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>您吃外卖或外出就餐的频率？</label>
+                    <select name="eatOut">
+                        <option value="0">几乎不吃</option>
+                        <option value="1">每周1-2次</option>
+                        <option value="2">每周3-5次</option>
+                        <option value="3">每天1次以上</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>您吃零食(含糖饮料、甜点等)的频率？</label>
+                    <select name="snacks">
+                        <option value="0">几乎不吃</option>
+                        <option value="1">每周1-2次</option>
+                        <option value="2">每周3-5次</option>
+                        <option value="3">每天1次以上</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>您每天的饮水量(约多少杯，250ml/杯)?</label>
+                    <select name="water">
+                        <option value="0">少于4杯</option>
+                        <option value="1">4-6杯</option>
+                        <option value="2">7-8杯</option>
+                        <option value="3">8杯以上</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" onclick="assessDiet()">获取饮食评估</button>
+        </form>
+
+        <div id="dietResult" class="result"></div>
+    </div>
+</div>
+
+<!-- 心理健康页面 -->
+<div id="mental" class="page">
+    <div class="card">
+        <h1>🧠 心理健康评估</h1>
+        <p>请根据<strong>最近一周</strong>的感受，选择最符合您情况的选项：</p>
+
+        <form id="mentalForm">
+            <!-- DASS-21抑郁部分 -->
+            <div class="question-group">
+                <h3>情绪状态</h3>
+                <div class="question">
+                    <label>1. 我感到情绪低落</label>
+                    <select name="depression1">
+                        <option value="0">完全不符合</option>
+                        <option value="1">有时符合</option>
+                        <option value="2">经常符合</option>
+                        <option value="3">总是符合</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>2. 我对事情失去兴趣</label>
+                    <select name="depression2">
+                        <option value="0">完全不符合</option>
+                        <option value="1">有时符合</option>
+                        <option value="2">经常符合</option>
+                        <option value="3">总是符合</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>3. 我觉得未来没有希望</label>
+                    <select name="depression3">
+                        <option value="0">完全不符合</option>
+                        <option value="1">有时符合</option>
+                        <option value="2">经常符合</option>
+                        <option value="3">总是符合</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- DASS-21焦虑部分 -->
+            <div class="question-group">
+                <h3>焦虑感受</h3>
+                <div class="question">
+                    <label>4. 我感到紧张不安</label>
+                    <select name="anxiety1">
+                        <option value="0">完全不符合</option>
+                        <option value="1">有时符合</option>
+                        <option value="2">经常符合</option>
+                        <option value="3">总是符合</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>5. 我担心很多事情</label>
+                    <select name="anxiety2">
+                        <option value="0">完全不符合</option>
+                        <option value="1">有时符合</option>
+                        <option value="2">经常符合</option>
+                        <option value="3">总是符合</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>6. 我感到恐慌</label>
+                    <select name="anxiety3">
+                        <option value="0">完全不符合</option>
+                        <option value="1">有时符合</option>
+                        <option value="2">经常符合</option>
+                        <option value="3">总是符合</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- DASS-21压力部分 -->
+            <div class="question-group">
+                <h3>压力反应</h3>
+                <div class="question">
+                    <label>7. 我很难放松</label>
+                    <select name="stress1">
+                        <option value="0">完全不符合</option>
+                        <option value="1">有时符合</option>
+                        <option value="2">经常符合</option>
+                        <option value="3">总是符合</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>8. 我容易烦躁</label>
+                    <select name="stress2">
+                        <option value="0">完全不符合</option>
+                        <option value="1">有时符合</option>
+                        <option value="2">经常符合</option>
+                        <option value="3">总是符合</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>9. 我觉得自己很容易被激怒</label>
+                    <select name="stress3">
+                        <option value="0">完全不符合</option>
+                        <option value="1">有时符合</option>
+                        <option value="2">经常符合</option>
+                        <option value="3">总是符合</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 自杀风险评估 -->
+            <div class="question-group warning-box">
+                <h3>重要问题</h3>
+                <div class="question">
+                    <label>最近是否有伤害自己的想法？</label>
+                    <select name="suicideRisk" id="suicideRisk">
+                        <option value="0">完全没有</option>
+                        <option value="1">偶尔想过但不会实施</option>
+                        <option value="2">认真考虑过</option>
+                        <option value="3">有具体计划</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" onclick="assessMentalHealth()">获取评估结果</button>
+        </form>
+
+        <div id="mentalResult" class="result"></div>
+        <div id="emergencyContact" class="emergency" style="display:none">
+            <h3>⚠️ 紧急帮助资源</h3>
+            <p>如果您感到极度痛苦或有自伤想法：</p>
+            <ul>
+                <li>心理援助热线：12320（全国24小时）</li>
+                <li>北京心理危机干预中心：010-82951332</li>
+                <li>希望24热线（自杀防治）：400-161-9995</li>
+                <li>立即前往最近的医院急诊科</li>
+            </ul>
+            <p>您不是一个人，帮助就在身边。</p>
+        </div>
+    </div>
+</div>
+
+       <!-- 运动水平页面 -->
+<div id="exercise" class="page">
+    <div class="card">
+        <h1>🏃 运动水平评估</h1>
+        <p>请回忆过去7天内您的体力活动情况：</p>
+
+        <form id="exerciseForm">
+            <!-- 有氧运动部分 -->
+            <div class="question-group">
+                <h3>1. 高强度活动</h3>
+                <p>如跑步、快速游泳、竞技运动、有氧操、快速骑行等</p>
+
+                <div class="question">
+                    <label>过去7天，您进行了几天高强度活动？</label>
+                    <select name="vigorousDays">
+                        <option value="0">0天</option>
+                        <option value="1">1天</option>
+                        <option value="2">2天</option>
+                        <option value="3">3天</option>
+                        <option value="4">4天</option>
+                        <option value="5">5天</option>
+                        <option value="6">6天</option>
+                        <option value="7">7天</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>在这些天，通常每天进行多长时间？</label>
+                    <div class="input-with-unit">
+                        <input type="number" name="vigorousMinutes" min="0" max="300" placeholder="分钟">
+                        <span>分钟/天</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中等强度运动部分 -->
+            <div class="question-group">
+                <h3>2. 中等强度活动</h3>
+                <p>如快走、休闲游泳、慢速骑行、乒乓球、瑜伽等</p>
+
+                <div class="question">
+                    <label>过去7天，您进行了几天中等强度活动？</label>
+                    <select name="moderateDays">
+                        <option value="0">0天</option>
+                        <option value="1">1天</option>
+                        <option value="2">2天</option>
+                        <option value="3">3天</option>
+                        <option value="4">4天</option>
+                        <option value="5">5天</option>
+                        <option value="6">6天</option>
+                        <option value="7">7天</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>在这些天，通常每天进行多长时间？</label>
+                    <div class="input-with-unit">
+                        <input type="number" name="moderateMinutes" min="0" max="300" placeholder="分钟">
+                        <span>分钟/天</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 步行部分 -->
+            <div class="question-group">
+                <h3>3. 步行</h3>
+                <p>包括通勤步行、散步等（每次至少10分钟）</p>
+
+                <div class="question">
+                    <label>过去7天，您步行了多少天？</label>
+                    <select name="walkingDays">
+                        <option value="0">0天</option>
+                        <option value="1">1天</option>
+                        <option value="2">2天</option>
+                        <option value="3">3天</option>
+                        <option value="4">4天</option>
+                        <option value="5">5天</option>
+                        <option value="6">6天</option>
+                        <option value="7">7天</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>在这些天，通常每天步行多长时间？</label>
+                    <div class="input-with-unit">
+                        <input type="number" name="walkingMinutes" min="0" max="300" placeholder="分钟">
+                        <span>分钟/天</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 久坐时间 -->
+            <div class="question-group">
+                <h3>4. 久坐时间</h3>
+                <p>包括坐着工作、看电视、使用电脑等</p>
+
+                <div class="question">
+                    <label>过去7天，每天坐着的时间大约是多少？</label>
+                    <div class="input-with-unit">
+                        <input type="number" name="sittingHours" min="0" max="24" placeholder="小时">
+                        <span>小时/天</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人基本信息 -->
+            <div class="question-group">
+                <h3>5. 您的信息</h3>
+
+                <div class="question">
+                    <label>年龄</label>
+                    <input type="number" name="age" min="18" max="100">
+                </div>
+
+                <div class="question">
+                    <label>性别</label>
+                    <select name="gender">
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
+                </div>
+
+                <div class="question">
+                    <label>是否有慢性病或运动限制？</label>
+                    <select name="healthCondition">
+                        <option value="none">无</option>
+                        <option value="cardiovascular">心血管疾病</option>
+                        <option value="musculoskeletal">肌肉骨骼问题</option>
+                        <option value="metabolic">代谢性疾病(如糖尿病)</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" onclick="assessExerciseLevel()">评估运动水平</button>
+        </form>
+
+        <div id="exerciseResult" class="result"></div>
+    </div>
+</div>
+
+          <footer>
+            <p>© 2025 悦之心健康检测中心 | 本工具提供的信息仅供参考，不能替代专业医疗建议，如有紧急情况请及时就医</p>
+             <p>联系我们： <i class="fas fa-phone"></i>19133232635  | <i class="fas fa-envelope"></i>3107861524@qq.com </p>
+               <p>隐私声明：您的数据仅用于健康评估，我们会匿名化处理所有数据</p>
+        </footer>
+          </div>
+<script>
+
+// ===== 健康数据存储系统 =====
+// 在页面加载时执行
+document.addEventListener('DOMContentLoaded', function() {
+    // 用户ID生成
+    let userId = localStorage.getItem('healthUserId');
+    if (!userId) {
+        userId = 'user_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('healthUserId', userId);
+    }
+
+    // 初始化数据结构
+    window.healthData = JSON.parse(localStorage.getItem('healthData')) || {
+        userId: userId,
+        reports: []
+    };
+
+    // 保存报告函数
+    window.saveReport = function(type, score, details) {
+        healthData.reports.push({
+            type,
+            score,
+            details,
+            timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('healthData', JSON.stringify(healthData));
+    };
+
+    // 获取报告名称
+    window.getReportName = function(type) {
+        const names = {
+            'blood-sugar': '血糖检测',
+            'bmi': 'BMI计算',
+            'sleep': '睡眠质量',
+            'exercise': '运动水平',
+            'diet': '饮食健康',
+            'mental': '心理健康'
+        };
+        return names[type] || type;
+    };
+
+    // 加载历史记录
+    window.loadReports = function() {
+        const container = document.getElementById('reports-list');
+        const reports = healthData.reports;
+
+        if (!reports || reports.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>暂无测评记录</h3>
+                    <p>完成测评后，您的记录将显示在这里</p>
+                </div>
+            `;
+            return;
+        }
+
+        // 按时间倒序排序
+        const sortedReports = [...reports].sort((a, b) =>
+            new Date(b.timestamp) - new Date(a.timestamp)
+        );
+
+        container.innerHTML = sortedReports.map(report => {
+            const date = new Date(report.timestamp);
+            const typeName = getReportName(report.type);
+
+            return `
+                <div class="report-item">
+                    <div class="report-header">
+                        <div class="report-title">${typeName}</div>
+                        <div class="report-score">${report.score.toFixed(0)}</div>
+                    </div>
+
+                    <div class="report-time">${date.toLocaleString()}</div>
+
+                    <div class="report-details">
+                        ${renderReportDetails(report)}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    };
+
+    // 渲染报告详情
+    window.renderReportDetails = function(report) {
+        switch(report.type) {
+            case 'blood-sugar':
+                return `
+                    <div class="detail-item">
+                        <div class="detail-label">血糖值</div>
+                        <div class="detail-value">${report.details.value.toFixed(1)} mmol/L</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">测量时间</div>
+                        <div class="detail-value">${report.details.time === 'fasting' ? '空腹' : '餐后'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">状态</div>
+                        <div class="detail-value">${report.details.isNormal ? '正常' : '异常'}</div>
+                    </div>
+                `;
+
+            case 'bmi':
+                return `
+                    <div class="detail-item">
+                        <div class="detail-label">身高</div>
+                        <div class="detail-value">${report.details.height} cm</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">体重</div>
+                        <div class="detail-value">${report.details.weight} kg</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">BMI</div>
+                        <div class="detail-value">${report.details.bmi.toFixed(1)}</div>
+                    </div>
+                `;
+
+            // 其他类型的报告详情类似处理...
+            default:
+                return '';
+        }
+    };
+
+
+   // 综合评级计算 - 修复版本
+window.calculateOverallRating = function() {
+    const scores = {
+        'blood-sugar': 0.2,
+        'bmi': 0.2,
+        'sleep': 0.15,
+        'exercise': 0.15,
+        'diet': 0.15,
+        'mental': 0.15
+    };
+
+    // 获取每个类型的最新报告
+    const latestReports = {};
+    healthData.reports.forEach(report => {
+        if (!latestReports[report.type] ||
+            new Date(report.timestamp) > new Date(latestReports[report.type].timestamp)) {
+            latestReports[report.type] = report;
+        }
+    });
+
+    let total = 0;
+    let weightSum = 0;
+
+    // 只计算最新报告
+    Object.keys(scores).forEach(type => {
+        if (latestReports[type]) {
+            total += latestReports[type].score * scores[type];
+            weightSum += scores[type];
+        }
+    });
+
+    const overallScore = weightSum > 0 ? total / weightSum : 0;
+    const rating = getRatingLevel(overallScore);
+
+    // 添加可视化进度条
+    document.getElementById('overall-rating').innerHTML = `
+        <div class="result" style="text-align: center;">
+            <h2>综合得分: ${overallScore.toFixed(1)}</h2>
+            <h3 style="color: ${getRatingColor(overallScore)}">评级: ${rating}</h3>
+            <div class="progress-container" style="margin: 20px auto; width: 80%;">
+                <div class="progress-bar" style="width: ${overallScore}%; background-color: ${getRatingColor(overallScore)};"></div>
+            </div>
+        </div>
+    `;
+
+    // 添加各维度评分展示
+    showCategoryScores(latestReports);
+};
+
+// 获取评级颜色
+window.getRatingColor = function(score) {
+    if (score >= 90) return '#4CAF50';
+    if (score >= 80) return '#8BC34A';
+    if (score >= 70) return '#FFC107';
+    if (score >= 60) return '#FF9800';
+    return '#F44336';
+};
+
+// 显示各分类评分
+window.showCategoryScores = function(latestReports) {
+    const container = document.getElementById('category-scores');
+    if (!container) return;
+
+    let html = `<div style="margin-top: 30px;">
+                <h3>各健康维度评分</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">`;
+
+    const categories = [
+        { id: 'blood-sugar', name: '血糖检测', icon: '🩸' },
+        { id: 'bmi', name: 'BMI计算', icon: '⚖️' },
+        { id: 'sleep', name: '睡眠质量', icon: '🌙' },
+        { id: 'exercise', name: '运动水平', icon: '🏃' },
+        { id: 'diet', name: '饮食健康', icon: '🍎' },
+        { id: 'mental', name: '心理健康', icon: '🧠' }
+    ];
+
+    categories.forEach(cat => {
+        const report = latestReports[cat.id];
+        const score = report ? report.score : 0;
+        const color = getRatingColor(score);
+
+        html += `
+            <div style="background: white; border-radius: 10px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 4px solid ${color}">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.5rem;">${cat.icon}</span>
+                    <h4 style="margin: 0;">${cat.name}</h4>
+                </div>
+                <div style="margin-top: 10px;">
+                    <div style="height: 10px; background: #e0e0e0; border-radius: 5px; margin: 10px 0;">
+                        <div style="height: 100%; border-radius: 5px; background-color: ${color}; width: ${score}%"></div>
+                    </div>
+                    <p style="margin: 5px 0; text-align: center; font-weight: bold; color: ${color}">${score.toFixed(1)}</p>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `</div></div>`;
+    container.innerHTML = html;
+};
+
+// 评级等级
+window.getRatingLevel = function(score) {
+    if (score >= 90) return '优秀';
+    if (score >= 80) return '良好';
+    if (score >= 70) return '中等';
+    if (score >= 60) return '一般';
+    return '需要改善';
+};
+
+
+    // 数据导出功能
+    window.exportData = function() {
+        const dataStr = JSON.stringify(healthData, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `health-report-${userId}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+});
+
+
+
+// ===== 添加数据提交功能 =====
+    window.submitData = function() {
+        // 检查是否有数据可提交
+        if (!healthData.reports || healthData.reports.length === 0) {
+            alert('没有数据可提交！请先完成至少一项健康评估。');
+            return;
+        }
+
+        const dataStr = JSON.stringify(healthData, null, 2);
+
+         // 创建GitHub Issue的内容
+    const title = `健康数据提交 - 用户ID: ${healthData.userId}`;
+    const body = "```json\n" + JSON.stringify(healthData, null, 2) + "\n```";
+
+    // 用户将被重定向到GitHub Issue创建页面
+    const githubUrl = `https://github.com/YOUR_USERNAME/YOUR_REPO/issues/new` +
+        `?title=${encodeURIComponent(title)}` +
+        `&body=${encodeURIComponent(body)}` +
+        `&labels=data-submission`;
+
+    // 在新标签页打开GitHub Issue创建页面
+    window.open(githubUrl, '_blank');
+};
+
+
+
+// 页面导航功能
+document.addEventListener('DOMContentLoaded', function() {
+    // 处理导航链接点击
+    document.querySelectorAll('.nav-link, .goto-btn').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // 更新导航状态
+            document.querySelectorAll('.nav-link').forEach(nav => {
+                nav.classList.remove('active');
+            });
+
+            if(this.classList.contains('nav-link')) {
+                this.classList.add('active');
+            }
+
+            // 显示目标页面
+            const targetPage = this.dataset.page;
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(targetPage).classList.add('active');
+
+            // 滚动到顶部
+            window.scrollTo(0, 0);
+
+            if (targetPage === 'history') {
+                loadReports();
+            }
+            if (targetPage === 'summary') {
+                calculateOverallRating();
+            }
+        });
+    });
+});
+
+
+// 血糖检测功能
+function checkSugar() {
+    const bloodSugar = parseFloat(document.getElementById('bloodSugar').value);
+    const measureTime = document.getElementById('measureTime').value;
+    const resultDiv = document.getElementById('sugar-result');
+
+    if (!bloodSugar || bloodSugar <= 0) {
+        alert("请输入有效的血糖值");
+        return;
+    }
+
+    let normalRange, isNormal;
+    if (measureTime === 'fasting') {
+        normalRange = "3.9-6.1 mmol/L";
+        isNormal = bloodSugar >= 3.9 && bloodSugar <= 6.1;
+    } else {
+        normalRange = "<7.8 mmol/L";
+        isNormal = bloodSugar < 7.8;
+    }
+
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `
+        <h2>检测结果：${isNormal ? '<span style="color:#2E7D32">正常</span>' : '<span style="color:#d32f2f">异常</span>'}</h2>
+        <p>血糖值：${bloodSugar.toFixed(1)} mmol/L（${measureTime === 'fasting' ? '空腹' : '餐后'}）</p>
+        <p>参考范围：${normalRange}</p>
+        ${generateSugarAdvice(bloodSugar, measureTime)}
+    `;
+    resultDiv.style.backgroundColor = isNormal ? '#e8f5e9' : '#ffebee';
+    const sugarScore = isNormal ? 100 : 60;
+    saveReport('blood-sugar', sugarScore, {
+        value: bloodSugar,
+        time: measureTime,
+        isNormal: isNormal
+    });
+}
+
+function generateSugarAdvice(value, time) {
+    let adviceHTML = '<div class="advice-section">';
+
+    // 紧急警告
+    if (value > 13.9) {
+        adviceHTML += `
+            <div class="warning">
+                ⚠️ 血糖值过高！可能出现酮症酸中毒风险，请立即就医！
+            </div>
+        `;
+    }
+
+    // 运动建议
+    adviceHTML += `<div class="exercise-advice">`;
+    if (time === 'afterMeal') {
+        if (value >= 7.8 && value <= 10) {
+            adviceHTML += `
+                <h3>运动建议：</h3>
+                <ul>
+                    <li>餐后30分钟开始运动，持续时间20-30分钟</li>
+                    <li>推荐运动：快走（每分钟100-120步）</li>
+                    <li>避免高强度运动（可能引起血糖波动）</li>
+                </ul>
+            `;
+        } else if (value > 10) {
+            adviceHTML += `
+                <h3>运动建议：</h3>
+                <ul>
+                    <li>餐后1小时进行低强度运动（如散步）</li>
+                    <li>每次运动时间15-20分钟</li>
+                    <li>运动前检测血糖，<13.9mmol/L方可运动</li>
+                </ul>
+            `;
+        }
+    } else {
+        if (value >= 6.1 && value <= 7.0) {
+            adviceHTML += `
+                <h3>运动建议：</h3>
+                <ul>
+                    <li>每日规律运动30-45分钟</li>
+                    <li>推荐：骑自行车、游泳等中等强度运动</li>
+                    <li>每周至少5天运动</li>
+                </ul>
+            `;
+        }
+    }
+    adviceHTML += `</div>`;
+
+    // 饮食建议
+    adviceHTML += `<div class="diet-advice">`;
+    if (time === 'fasting') {
+        adviceHTML += `
+            <h3>饮食建议：</h3>
+            <ul>
+                ${value > 6.1 ? `
+                    <li>控制总热量摄入（每日减少300-500大卡）</li>
+                    <li>选择低GI主食（糙米、全麦面包等）</li>
+                    <li>增加膳食纤维（每日蔬菜≥500g）</li>
+                ` : `
+                    <li>保持三餐定时定量</li>
+                    <li>优质蛋白摄入（鸡蛋、鱼肉、豆制品）</li>
+                    <li>限制精制糖和加工食品</li>
+                `}
+            </ul>
+        `;
+    } else {
+        adviceHTML += `
+            <h3>饮食建议：</h3>
+            <ul>
+                ${value >= 7.8 ? `
+                    <li>控制碳水化合物摄入（每餐≤60g）</li>
+                    <li>采用211餐盘法：2份蔬菜+1份蛋白+1份粗粮</li>
+                    <li>餐间零食选择原味坚果（每次≤15g）</li>
+                ` : `
+                    <li>保持均衡饮食（参考膳食宝塔）</li>
+                    <li>注意进餐顺序：汤→菜→肉→主食</li>
+                    <li>细嚼慢咽（每餐≥20分钟）</li>
+                `}
+            </ul>
+        `;
+    }
+    adviceHTML += `</div></div>`;
+
+    return adviceHTML;
+}
+
+
+
+
+
+// BMI检测功能
+function calculateBMI() {
+    // 获取输入值
+    const height = parseFloat(document.getElementById('height').value) / 100;
+    const weight = parseFloat(document.getElementById('weight').value);
+    const age = parseInt(document.getElementById('age').value);
+    const occupation = document.getElementById('occupation').value;
+    const resultDiv = document.getElementById('bmi-result');
+
+    // 验证输入
+    if (!height || !weight || height <= 0 || weight <= 0 || !age || age < 10 || age > 100) {
+        alert("请输入有效的数值");
+        return;
+    }
+
+    // 计算BMI
+    const bmi = weight / (height * height);
+
+    // 生成建议
+    const healthAdvice = getHealthAdvice(bmi);
+    const personalizedAdvice = generateBMIAdvice(bmi, age, occupation);
+
+    // 显示结果
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `
+        <h2>您的BMI值：<span style="color:${getBMIColorHex(bmi)}">${bmi.toFixed(1)}</span></h2>
+        <p>${healthAdvice}</p>
+        ${personalizedAdvice}
+    `;
+    resultDiv.style.backgroundColor = getBMIColor(bmi);
+    let bmiScore;
+    if (bmi < 18.5) bmiScore = 70;
+    else if (bmi < 24) bmiScore = 100;
+    else if (bmi < 28) bmiScore = 80;
+    else bmiScore = 60;
+
+    saveReport('bmi', bmiScore, {
+        height: height,
+        weight: weight,
+        bmi: bmi
+    });
+}
+
+function getHealthAdvice(bmi) {
+    if (bmi < 18.5) return "您的体重偏轻，建议增加营养摄入";
+    if (bmi < 24) return "恭喜！您的体重在健康范围内";
+    if (bmi < 28) return "您的体重过重，建议适当运动";
+    return "您的体重属于肥胖范围，建议咨询专业医生";
+}
+
+function getBMIColor(bmi) {
+    if (bmi < 18.5) return '#fff9c4'; // 浅黄色
+    if (bmi < 24) return '#e8f5e9';   // 浅绿色
+    if (bmi < 28) return '#fff3e0';   // 浅橙色
+    return '#ffebee';                 // 浅红色
+}
+
+function getBMIColorHex(bmi) {
+    if (bmi < 18.5) return '#F57F17'; // 黄色
+    if (bmi < 24) return '#2E7D32';   // 绿色
+    if (bmi < 28) return '#EF6C00';   // 橙色
+    return '#D32F2F';                 // 红色
+}
+
+function generateBMIAdvice(bmi, age, occupation) {
+    let intensity = '';
+    let exerciseType = '';
+    let dietAdvice = '';
+
+    // 饮食建议
+    if (bmi < 18.5) {
+        dietAdvice = '增加热量摄入，选择高营养密度食物如坚果、全脂乳制品';
+    } else if (bmi < 24) {
+        dietAdvice = '保持均衡饮食，多吃蔬菜水果和全谷物';
+    } else {
+        dietAdvice = '减少精制碳水，增加优质蛋白和膳食纤维摄入';
+    }
+
+    // 运动强度建议
+    if (age < 18) {
+        intensity = '中等强度（如篮球、游泳）每周5次，每次40分钟';
+    } else if (age < 45) {
+        intensity = occupation === 'sedentary'
+            ? '高强度间歇训练（HIIT）每周3次+日常步行10000步'
+            : '中等强度有氧运动（如慢跑）每周5次';
+    } else {
+        intensity = '低强度运动（如快走、太极拳）每周5次，每次30分钟';
+    }
+
+    // 运动类型建议
+    switch(occupation) {
+        case 'sedentary':
+            exerciseType = '颈肩放松操+核心肌群训练';
+            break;
+        case 'physical':
+            exerciseType = '柔韧性训练+低冲击有氧运动';
+            break;
+        default:
+            exerciseType = '综合体能训练';
+    }
+
+    return `
+        <div class="advice-section">
+            <div class="exercise-advice">
+                <h3>运动方案：</h3>
+                <p>${intensity}</p>
+                <h3>推荐运动：</h3>
+                <p>${exerciseType}</p>
+            </div>
+            <div class="diet-advice">
+                <h3>饮食建议：</h3>
+                <p>${dietAdvice}</p>
+            </div>
+        </div>
+    `;
+}
+
+
+
+
+
+
+
+
+// // 心理健康评估功能
+function assessMentalHealth() {
+    const form = document.getElementById('mentalForm');
+    const resultDiv = document.getElementById('mentalResult');
+    const emergencyDiv = document.getElementById('emergencyContact');
+
+    // 计算DASS-21得分（简化版）
+    const depressionScore =
+        parseInt(form.elements['depression1'].value) +
+        parseInt(form.elements['depression2'].value) +
+        parseInt(form.elements['depression3'].value);
+
+    const anxietyScore =
+        parseInt(form.elements['anxiety1'].value) +
+        parseInt(form.elements['anxiety2'].value) +
+        parseInt(form.elements['anxiety3'].value);
+
+    const stressScore =
+        parseInt(form.elements['stress1'].value) +
+        parseInt(form.elements['stress2'].value) +
+        parseInt(form.elements['stress3'].value);
+
+    // 自杀风险评估
+    const suicideRisk = parseInt(form.elements['suicideRisk'].value);
+
+    // 评估等级
+    const depressionLevel = getDepressionLevel(depressionScore * 2); // 转换为21分制
+    const anxietyLevel = getAnxietyLevel(anxietyScore * 2);
+    const stressLevel = getStressLevel(stressScore * 2);
+
+    // 紧急情况处理
+    if (suicideRisk >= 2 || depressionLevel.severity === "严重") {
+        emergencyDiv.style.display = 'block';
+    } else {
+        emergencyDiv.style.display = 'none';
+    }
+
+    // 生成结果报告
+    const resultHTML = `
+        <h2>您的心理健康评估结果</h2>
+
+        ${suicideRisk >= 1 ? `
+            <div class="warning">
+                <h3>⚠️ 重要提示：</h3>
+                <p>您的评估显示${suicideRisk >= 2 ? '较高' : '潜在'}的自伤风险，请立即联系专业人员</p>
+            </div>
+        ` : ''}
+
+        <div class="mental-health-scale">
+            <h3>抑郁情绪: ${depressionLevel.severity}</h3>
+            <p>得分: ${depressionScore * 2}/21 (${depressionLevel.description})</p>
+            <div class="scale-meter">
+                <div class="scale-meter-fill depression-fill" style="width: ${depressionScore * 9.5}%"></div>
+            </div>
+        </div>
+
+        <div class="mental-health-scale">
+            <h3>焦虑症状: ${anxietyLevel.severity}</h3>
+            <p>得分: ${anxietyScore * 2}/21 (${anxietyLevel.description})</p>
+            <div class="scale-meter">
+                <div class="scale-meter-fill anxiety-fill" style="width: ${anxietyScore * 9.5}%"></div>
+            </div>
+        </div>
+
+        <div class="mental-health-scale">
+            <h3>压力反应: ${stressLevel.severity}</h3>
+            <p>得分: ${stressScore * 2}/21 (${stressLevel.description})</p>
+            <div class="scale-meter">
+                <div class="scale-meter-fill stress-fill" style="width: ${stressScore * 9.5}%"></div>
+            </div>
+        </div>
+
+        <div class="coping-card">
+            <h4>💡 根据您的评估结果建议：</h4>
+            <ul>
+                ${generateMentalHealthAdvice(depressionScore, anxietyScore, stressScore, suicideRisk)}
+            </ul>
+        </div>
+
+        <div class="coping-card">
+            <h4>🧘 心理自助资源：</h4>
+            <ul>
+                <li><strong>放松技巧：</strong>尝试4-7-8呼吸法（吸气4秒，屏息7秒，呼气8秒）</li>
+                <li><strong>情绪日记：</strong>每天记录3件让您感恩的小事</li>
+                <li><strong>正念练习：</strong>使用冥想APP如"潮汐"或"Headspace"</li>
+                <li><strong>身体活动：</strong>每天30分钟步行可显著改善情绪</li>
+            </ul>
+        </div>
+
+        <div class="reference">
+            <p>注：本评估基于DASS-21量表简化版，结果仅供参考，不能替代专业诊断。</p>
+        </div>
+    `;
+
+    resultDiv.innerHTML = resultHTML;
+    resultDiv.style.display = 'block';
+ const avgMentalScore = (depressionScore + anxietyScore + stressScore) / 3;
+    const mentalScore = 100 - (avgMentalScore * 4.76); // 转换为百分制
+
+    saveReport('mental', mentalScore, {
+        depression: depressionScore,
+        anxiety: anxietyScore,
+        stress: stressScore
+    });
+
+    resultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+// DASS-21评估标准
+function getDepressionLevel(score) {
+    if (score <= 4) return { severity: "正常", description: "情绪状态良好" };
+    if (score <= 6) return { severity: "轻度", description: "偶尔情绪低落" };
+    if (score <= 10) return { severity: "中度", description: "明显情绪困扰" };
+    if (score <= 13) return { severity: "重度", description: "严重抑郁症状" };
+    return { severity: "极重", description: "急需专业帮助" };
+}
+
+function getAnxietyLevel(score) {
+    if (score <= 3) return { severity: "正常", description: "焦虑水平正常" };
+    if (score <= 5) return { severity: "轻度", description: "偶有焦虑" };
+    if (score <= 7) return { severity: "中度", description: "明显焦虑" };
+    if (score <= 9) return { severity: "重度", description: "严重焦虑" };
+    return { severity: "极重", description: "惊恐发作可能" };
+}
+
+function getStressLevel(score) {
+    if (score <= 7) return { severity: "正常", description: "压力应对良好" };
+    if (score <= 9) return { severity: "轻度", description: "偶有压力" };
+    if (score <= 12) return { severity: "中度", description: "持续压力" };
+    if (score <= 16) return { severity: "重度", description: "高压状态" };
+    return { severity: "极重", description: "身心俱疲" };
+}
+
+// 生成个性化建议
+function generateMentalHealthAdvice(depression, anxiety, stress, suicideRisk) {
+    let advice = '';
+
+    // 自杀风险评估
+    if (suicideRisk >= 2) {
+        advice += `
+            <li class="warning">⚠️ <strong>立即行动：</strong>您报告有自伤想法，请立即联系心理援助热线或信任的人</li>
+            <li>移除可能用于自伤的物品</li>
+            <li>不要独自一人，确保有人陪伴</li>
+        `;
+    } else if (suicideRisk === 1) {
+        advice += `
+            <li>您偶尔有消极想法，建议与心理咨询师谈谈这些感受</li>
+            <li>制定安全计划：列出可以联系的支持人员</li>
+        `;
+    }
+
+    // 抑郁建议
+    if (depression >= 6) {
+        advice += `
+            <li><strong>抑郁情绪：</strong>建议预约精神科医生或心理咨询师</li>
+            <li>保持规律的作息时间，尤其固定起床时间</li>
+            <li>每天进行少量运动，即使只是短途散步</li>
+        `;
+    } else if (depression >= 3) {
+        advice += `
+            <li><strong>情绪波动：</strong>尝试记录情绪变化规律</li>
+            <li>增加社交活动，每周至少见1位朋友</li>
+        `;
+    }
+
+    // 焦虑建议
+    if (anxiety >= 6) {
+        advice += `
+            <li><strong>焦虑管理：</strong>练习腹式呼吸，每天3次</li>
+            <li>限制咖啡因摄入，尤其是下午</li>
+            <li>尝试"5-4-3-2-1" grounding技巧：说出5个看到的、4个触摸到的、3个听到的、2个闻到的和1个尝到的东西</li>
+        `;
+    } else if (anxiety >= 3) {
+        advice += `
+            <li><strong>焦虑缓解：</strong>每天安排"担忧时间"(15分钟)，其他时间推迟担忧</li>
+            <li>练习渐进式肌肉放松</li>
+        `;
+    }
+
+    // 压力建议
+    if (stress >= 6) {
+        advice += `
+            <li><strong>压力调节：</strong>学习时间管理技巧</li>
+            <li>每天保证7-8小时睡眠</li>
+            <li>尝试瑜伽或太极等舒缓运动</li>
+        `;
+    } else if (stress >= 3) {
+        advice += `
+            <li><strong>压力缓解：</strong>每天10分钟正念冥想</li>
+            <li>建立工作-休息周期(如50分钟工作+10分钟休息)</li>
+        `;
+    }
+
+    // 通用建议
+    if (advice === '') {
+        advice = `
+            <li>您的心理健康状态良好，继续保持</li>
+            <li>预防性措施：保持社交联系和规律运动</li>
+            <li>学习情绪管理技巧以备不时之需</li>
+        `;
+    } else {
+        advice += `
+            <li><strong>专业帮助：</strong>如果症状持续2周以上，建议寻求专业评估</li>
+            <li><strong>紧急情况：</strong>当感到失控时，立即联系危机干预热线</li>
+        `;
+    }
+
+    return advice;
+}
+
+
+
+
+
+
+// PSQI睡眠质量评估
+function calculatePSQI() {
+    const form = document.getElementById('sleepForm');
+    const resultDiv = document.getElementById('sleepResult');
+
+    // 组成部分1：主观睡眠质量
+    const component1 = parseInt(form.elements['q1'].value);
+
+    // 组成部分2：睡眠潜伏期
+    const component2 = Math.min(parseInt(form.elements['q2'].value) + parseInt(form.elements['q3'].value), 3);
+
+    // 组成部分3：睡眠持续时间
+    const component3 = parseInt(form.elements['q4'].value);
+
+    // 组成部分4：睡眠效率（计算）
+    let component4 = 0;
+    const bedtime = form.elements['bedtime'].value;
+    const waketime = form.elements['waketime'].value;
+
+    if (bedtime && waketime) {
+        const bedHour = parseInt(bedtime.split(':')[0]);
+        const bedMin = parseInt(bedtime.split(':')[1]);
+        const wakeHour = parseInt(waketime.split(':')[0]);
+        const wakeMin = parseInt(waketime.split(':')[1]);
+
+        let bedTotal = bedHour * 60 + bedMin;
+        let wakeTotal = wakeHour * 60 + wakeMin;
+
+        // 处理跨午夜情况
+        if (wakeTotal < bedTotal) wakeTotal += 24 * 60;
+
+        const timeInBed = wakeTotal - bedTotal;
+        const sleepDuration = component3 === 0 ? 7.5 * 60 :
+                             component3 === 1 ? 6.5 * 60 :
+                             component3 === 2 ? 5.5 * 60 : 4.5 * 60;
+
+        const efficiency = (sleepDuration / timeInBed) * 100;
+
+        if (efficiency > 85) component4 = 0;
+        else if (efficiency > 75) component4 = 1;
+        else if (efficiency > 65) component4 = 2;
+        else component4 = 3;
+    }
+
+    // 组成部分5：睡眠障碍
+    const disturbanceItems = [
+        parseInt(form.elements['q5a'].value),
+        parseInt(form.elements['q5b'].value),
+        parseInt(form.elements['q5c'].value),
+        parseInt(form.elements['q5d'].value),
+        parseInt(form.elements['q5e'].value),
+        parseInt(form.elements['q5f'].value),
+        parseInt(form.elements['q5g'].value),
+        parseInt(form.elements['q5h'].value)
+    ];
+    const disturbanceSum = disturbanceItems.reduce((a, b) => a + b, 0);
+    const component5 = disturbanceSum > 0 ? (disturbanceSum > 9 ? 3 : (disturbanceSum > 4 ? 2 : 1)) : 0;
+
+    // 组成部分6：催眠药物使用
+    const component6 = parseInt(form.elements['q6'].value);
+
+    // 组成部分7：日间功能障碍
+    const component7 = Math.min(parseInt(form.elements['q7a'].value) + parseInt(form.elements['q7b'].value), 3);
+
+    // 计算总分
+    const totalScore = component1 + component2 + component3 + component4 + component5 + component6 + component7;
+
+    // 生成结果报告
+    let result = `
+        <h2>您的PSQI评分：${totalScore}分</h2>
+        <p>${getSleepQualityText(totalScore)}</p>
+
+        <div class="sleep-advice">
+            <h3>各组成部分评分：</h3>
+            <ul>
+                <li>主观睡眠质量：${component1}分</li>
+                <li>入睡时间：${component2}分</li>
+                <li>睡眠时间：${component3}分</li>
+                <li>睡眠效率：${component4}分</li>
+                <li>睡眠障碍：${component5}分</li>
+                <li>催眠药物：${component6}分</li>
+                <li>日间功能障碍：${component7}分</li>
+            </ul>
+        </div>
+
+        ${generateSleepAdvice(totalScore, component1, component2, component3, component4, component5, component6, component7)}
+    `;
+
+    resultDiv.innerHTML = result;
+    resultDiv.style.display = 'block';
+
+    // 滚动到结果
+    resultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+function getSleepQualityText(score) {
+    if (score <= 5) return '睡眠质量良好';
+    if (score <= 10) return '睡眠质量一般，有轻度问题';
+    return '睡眠质量差，建议就医咨询';
+}
+
+function generateSleepAdvice(totalScore, c1, c2, c3, c4, c5, c6, c7) {
+    let advice = '<div class="sleep-advice"><h3>个性化建议：</h3><ul>';
+
+    // 总体建议
+    if (totalScore > 10) {
+        advice += '<li class="warning">⚠️ 您的睡眠问题较严重，建议尽快咨询专业医生</li>';
+    }
+
+    // 各组成部分建议
+    if (c1 >= 2) {
+        advice += '<li>改善睡眠环境：保持卧室安静、黑暗和适宜温度(18-22℃)</li>';
+    }
+
+    if (c2 >= 2) {
+        advice += '<li>建立规律的睡前仪式：睡前1小时避免屏幕蓝光，尝试阅读或冥想</li>';
+    }
+
+    if (c3 >= 2) {
+        advice += '<li>增加睡眠时间：尝试提前30分钟上床，逐步调整作息</li>';
+    }
+
+    if (c4 >= 2) {
+        advice += '<li>提高睡眠效率：减少床上非睡眠活动(如玩手机)，只在困倦时上床</li>';
+    }
+
+    if (c5 >= 2) {
+        advice += '<li>减少夜间干扰：睡前2小时限制液体摄入，使用耳塞或眼罩</li>';
+    }
+
+    if (c6 >= 1) {
+        advice += '<li>谨慎使用安眠药：长期使用可能导致依赖，建议咨询医生</li>';
+    }
+
+    if (c7 >= 2) {
+        advice += '<li>改善日间精力：午休不超过30分钟，保持适度运动</li>';
+    }
+
+    // 通用建议
+    advice += `
+        <li>保持规律作息：每天同一时间起床(包括周末)</li>
+        <li>适度运动：每天30分钟有氧运动，但避免睡前3小时剧烈运动</li>
+        <li>控制咖啡因：下午2点后避免咖啡、茶等含咖啡因饮料</li>
+    `;
+
+    advice += '</ul></div>';
+    return advice;
+}
+
+
+
+
+
+
+
+// 运动水平评估功能
+function assessExerciseLevel() {
+    const form = document.getElementById('exerciseForm');
+    const resultDiv = document.getElementById('exerciseResult');
+
+    // 获取输入值
+    const vigorousDays = parseInt(form.elements['vigorousDays'].value);
+    const vigorousMins = parseInt(form.elements['vigorousMinutes'].value) || 0;
+    const moderateDays = parseInt(form.elements['moderateDays'].value);
+    const moderateMins = parseInt(form.elements['moderateMinutes'].value) || 0;
+    const walkingDays = parseInt(form.elements['walkingDays'].value);
+    const walkingMins = parseInt(form.elements['walkingMinutes'].value) || 0;
+    const sittingHours = parseFloat(form.elements['sittingHours'].value) || 0;
+    const age = parseInt(form.elements['age'].value);
+    const gender = form.elements['gender'].value;
+    const healthCondition = form.elements['healthCondition'].value;
+
+    // 验证输入
+    if ((vigorousDays > 0 && !vigorousMins) ||
+        (moderateDays > 0 && !moderateMins) ||
+        (walkingDays > 0 && !walkingMins) ||
+        !age) {
+        alert("请填写完整的运动信息");
+        return;
+    }
+
+    // 计算MET分钟/周（国际标准）
+    const vigorousMET = vigorousDays * vigorousMins * 8.0;
+    const moderateMET = moderateDays * moderateMins * 4.0;
+    const walkingMET = walkingDays * walkingMins * 3.3;
+    const totalMET = vigorousMET + moderateMET + walkingMET;
+
+    // 评估运动水平
+    let activityLevel = '';
+    let intensityPercentage = 0;
+
+    if (totalMET >= 3000) {
+        activityLevel = '高强度活跃';
+        intensityPercentage = 100;
+    } else if (totalMET >= 1500) {
+        activityLevel = '中等强度活跃';
+        intensityPercentage = 70;
+    } else if (totalMET >= 600) {
+        activityLevel = '基本活跃';
+        intensityPercentage = 40;
+    } else {
+        activityLevel = '缺乏运动';
+        intensityPercentage = 10;
+    }
+
+    // 久坐评估
+    const sittingLevel = sittingHours >= 8 ? '过高' :
+                       sittingHours >= 4 ? '中等' : '理想';
+
+    // 生成个性化建议
+    const healthWarning = healthCondition !== 'none' ?
+        `<div class="warning">
+            <p>⚠️ 您报告有${getHealthConditionText(healthCondition)}，开始新运动计划前请咨询医生</p>
+        </div>` : '';
+
+    const resultHTML = `
+        <h2>您的运动评估结果</h2>
+        ${healthWarning}
+
+        <div class="fitness-card">
+            <h4>🏆 总体运动水平: ${activityLevel}</h4>
+            <p>总运动量: ${Math.round(totalMET)} MET-分钟/周</p>
+            <div class="intensity-meter">
+                <div class="intensity-meter-fill" style="width: ${intensityPercentage}%"></div>
+            </div>
+            <p>${getActivityLevelDescription(activityLevel, totalMET)}</p>
+        </div>
+
+        <div class="fitness-card">
+            <h4>📊 运动构成分析</h4>
+            <ul>
+                <li>高强度运动: ${vigorousDays}天/周 × ${vigorousMins}分钟/天</li>
+                <li>中等强度运动: ${moderateDays}天/周 × ${moderateMins}分钟/天</li>
+                <li>步行: ${walkingDays}天/周 × ${walkingMins}分钟/天</li>
+                <li>久坐时间: ${sittingHours}小时/天 (${sittingLevel})</li>
+            </ul>
+        </div>
+
+        <div class="fitness-card">
+            <h4>📝 个性化运动建议</h4>
+            ${generateExerciseAdvice(activityLevel, totalMET, vigorousDays, moderateDays, walkingDays, sittingHours, age, gender, healthCondition)}
+        </div>
+
+        <div class="reference">
+            <h4>参考标准（WHO建议）</h4>
+            <ul>
+                <li>18-64岁成年人每周至少：</li>
+                <li>150-300分钟中等强度 <strong>或</strong> 75-150分钟高强度有氧运动</li>
+                <li>2天以上肌肉强化活动</li>
+                <li>限制久坐时间，每小时起来活动</li>
+            </ul>
+        </div>
+    `;
+
+    resultDiv.innerHTML = resultHTML;
+    resultDiv.style.display = 'block';
+    resultDiv.scrollIntoView({ behavior: 'smooth' });
+    const exerciseScore = Math.min(100, totalMET / 30); // 3000 MET对应100分
+    saveReport('exercise', exerciseScore, {
+        totalMET: totalMET,
+        activityLevel: activityLevel
+    });
+}
+
+// 辅助函数
+function getHealthConditionText(condition) {
+    const map = {
+        'cardiovascular': '心血管疾病',
+        'musculoskeletal': '肌肉骨骼问题',
+        'metabolic': '代谢性疾病',
+        'other': '健康问题'
+    };
+    return map[condition] || '健康问题';
+}
+
+function getActivityLevelDescription(level, met) {
+    const descriptions = {
+        '高强度活跃': `优秀！您的运动量(${Math.round(met)} MET)远超健康标准，保持规律运动的同时注意恢复`,
+        '中等强度活跃': `良好！您的运动量(${Math.round(met)} MET)达到健康标准，可考虑增加一些高强度运动`,
+        '基本活跃': `及格。您的运动量(${Math.round(met)} MET)接近最低标准，建议逐步增加运动时间和强度`,
+        '缺乏运动': `您的运动量(${Math.round(met)} MET)不足，长期可能影响健康，建议从每天10分钟步行开始`
+    };
+    return descriptions[level];
+}
+
+function generateExerciseAdvice(level, met, vigorousDays, moderateDays, walkingDays, sittingHours, age, gender, health) {
+    let advice = '<ul>';
+
+    // 根据活动水平建议
+    if (level === '缺乏运动') {
+        advice += `
+            <li>从低强度开始：每天10-15分钟步行，每周5天</li>
+            <li>设置小目标：如每天多走500步，每周增加10%运动时间</li>
+            <li>融入生活：走楼梯代替电梯，站立办公等</li>
+        `;
+    } else if (level === '基本活跃') {
+        advice += `
+            <li>增加运动频率：目标每周5天以上中等强度运动</li>
+            <li>尝试新形式：游泳、骑行、舞蹈等有趣的活动</li>
+            <li>加入力量训练：每周2次全身肌肉锻炼</li>
+        `;
+    } else {
+        advice += `
+            <li>保持多样性：结合有氧、力量和柔韧性训练</li>
+            <li>关注恢复：高强度训练后保证48小时恢复期</li>
+            <li>挑战自我：尝试间歇训练提升心肺功能</li>
+        `;
+    }
+
+    // 久坐建议
+    if (sittingHours >= 6) {
+        advice += `
+            <li>减少久坐：每30分钟站立活动1-2分钟</li>
+            <li>使用站立式办公桌或定时提醒</li>
+            <li>看电视时做简单拉伸或原地踏步</li>
+        `;
+    }
+
+    // 年龄相关建议
+    if (age > 50) {
+        advice += `
+            <li>注重平衡训练：预防跌倒，如太极拳、单腿站立</li>
+            <li>保护关节：选择低冲击运动如游泳、椭圆机</li>
+            <li>力量训练：保持肌肉量，每周2次</li>
+        `;
+    }
+
+    // 性别相关建议
+    if (gender === 'female') {
+        advice += `
+            <li>关注骨密度：结合负重运动和钙质摄入</li>
+            <li>盆底肌锻炼：凯格尔运动</li>
+        `;
+    }
+
+    // 健康状况建议
+    if (health !== 'none') {
+        advice += `
+            <li class="warning">根据您的健康状况，建议：</li>
+            <li>咨询医生后制定个性化方案</li>
+            <li>运动时注意监测身体反应</li>
+            <li>避免${health === 'cardiovascular' ? '剧烈运动' : health === 'musculoskeletal' ? '高冲击动作' : '长时间空腹运动'}</li>
+        `;
+    }
+
+    // 运动处方示例
+    advice += `
+        </ul>
+        <div class="exercise-advice">
+            <h4>🏅 为您推荐的运动计划：</h4>
+            ${generateExercisePrescription(level, age, health)}
+        </div>
+    `;
+
+    return advice;
+}
+
+function generateExercisePrescription(level, age, health) {
+    let prescription = '';
+
+    if (level === '缺乏运动') {
+        prescription = `
+            <p><strong>初级阶段(1-4周)：</strong></p>
+            <ul>
+                <li>每天步行10-15分钟，每周5天</li>
+                <li>每周2次椅子瑜伽或伸展运动</li>
+                <li>目标：每周累计150分钟轻度活动</li>
+            </ul>
+        `;
+    } else if (level === '基本活跃') {
+        prescription = `
+            <p><strong>中级阶段(4-12周)：</strong></p>
+            <ul>
+                <li>快走/游泳/骑行30分钟，每周5天</li>
+                <li>每周2次全身力量训练(自重或轻器械)</li>
+                <li>目标：每周150分钟中等强度运动</li>
+            </ul>
+        `;
+    } else {
+        prescription = `
+            <p><strong>高级阶段：</strong></p>
+            <ul>
+                <li>高强度间歇训练(HIIT)20分钟，每周2-3次</li>
+                <li>中等强度运动30-45分钟，每周3-4次</li>
+                <li>力量训练30分钟，每周2-3次</li>
+                <li>瑜伽/拉伸，每周2次</li>
+            </ul>
+        `;
+    }
+
+    // 特殊人群调整
+    if (age > 65 || health !== 'none') {
+        prescription += `
+            <p class="warning">⚠️ 根据您的年龄/健康状况，建议：</p>
+            <ul>
+                <li>运动前充分热身(10-15分钟)</li>
+                <li>${age > 65 ? '注重平衡训练' : health === 'cardiovascular' ? '避免屏气用力' : '避免关节过度负荷'}</li>
+                <li>运动时心率控制在(220-年龄)×0.6~0.8</li>
+            </ul>
+        `;
+    }
+
+    return prescription;
+}
+
+
+
+// ===== 饮食健康评估功能 =====
+function assessDiet() {
+    const form = document.getElementById('dietForm');
+    const resultDiv = document.getElementById('dietResult');
+
+    // 获取基本信息
+    const height = parseFloat(form.elements['height'].value);
+    const weight = parseFloat(form.elements['weight'].value);
+    const age = parseInt(form.elements['age'].value);
+    const gender = form.elements['gender'].value;
+    const activity = form.elements['activity'].value;
+
+    // 验证基本信息
+    if (!height || !weight || !age || height <= 0 || weight <= 0 || age <= 0) {
+        alert("请输入有效的身体数据");
+        return;
+    }
+
+    // 计算BMI
+    const bmi = weight / Math.pow(height/100, 2);
+    const bmiCategory = getBMICategory(bmi);
+
+    // 计算饮食多样性得分(DDS)
+    const ddsScore =
+        parseInt(form.elements['wholeGrain'].value) +
+        parseInt(form.elements['vegetables'].value) +
+        parseInt(form.elements['fruits'].value) +
+        parseInt(form.elements['dairy'].value) +
+        parseInt(form.elements['protein'].value);
+
+    // 获取饮食习惯数据
+    const mealsPerDay = parseInt(form.elements['mealsPerDay'].value);
+    const breakfastItems = Array.from(form.elements['breakfast'])
+        .filter(c => c.checked)
+        .map(c => c.value);
+    const eatOut = parseInt(form.elements['eatOut'].value);
+    const snacks = parseInt(form.elements['snacks'].value);
+    const water = parseInt(form.elements['water'].value);
+
+    // 计算基础代谢率(BMR)
+    let bmr;
+    if (gender === 'male') {
+        bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+    } else {
+        bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+    }
+
+    // 计算每日总能量需求
+    let tdee;
+    switch(activity) {
+        case 'sedentary': tdee = bmr * 1.2; break;
+        case 'light': tdee = bmr * 1.375; break;
+        case 'moderate': tdee = bmr * 1.55; break;
+        case 'active': tdee = bmr * 1.725; break;
+        default: tdee = bmr * 1.2;
+    }
+
+    // 评估结果
+    const dietQuality = assessDietQuality(ddsScore, breakfastItems, mealsPerDay, eatOut, snacks, water);
+
+    // 生成结果报告
+    const resultHTML = `
+        <h2>您的饮食健康报告</h2>
+
+        <div class="nutrition-card">
+            <h4>📊 基本指标</h4>
+            <ul>
+                <li>身高: ${height} cm</li>
+                <li>体重: ${weight} kg</li>
+                <li>BMI: ${bmi.toFixed(1)} (${bmiCategory})</li>
+                <li>基础代谢率: ${bmr.toFixed(0)} 大卡/天</li>
+                <li>每日能量需求: ${tdee.toFixed(0)} 大卡/天</li>
+            </ul>
+        </div>
+
+        <div class="nutrition-card">
+            <h4>🥗 饮食多样性评分</h4>
+            <div class="nutrition-score">${ddsScore}/15</div>
+            <div class="nutrition-meter">
+                <div class="nutrition-meter-fill" style="width: ${ddsScore*6.67}%"></div>
+            </div>
+            <p>${getDDSEvaluation(ddsScore)}</p>
+        </div>
+
+        <div class="nutrition-card">
+            <h4>📝 饮食结构分析</h4>
+            ${generateDietAnalysis(breakfastItems, mealsPerDay, eatOut, snacks, water)}
+        </div>
+
+        <div class="nutrition-card">
+            <h4>🍽️ 为您推荐的饮食改进</h4>
+            ${generateDietRecommendations(ddsScore, bmiCategory, breakfastItems, eatOut, snacks, water)}
+        </div>
+
+        <div class="nutrition-card">
+            <h4>📋 个性化饮食计划</h4>
+            ${generateMealPlan(bmiCategory, activity, gender, age)}
+        </div>
+
+        <div class="reference">
+            <p>评估标准参考：中国居民膳食指南(2022)、WHO健康饮食建议</p>
+        </div>
+    `;
+
+    resultDiv.innerHTML = resultHTML;
+    resultDiv.style.display = 'block';
+    resultDiv.scrollIntoView({ behavior: 'smooth' });
+      const dietScore = (ddsScore * 100) / 15; // 转换为百分制
+    saveReport('diet', dietScore, {
+        ddsScore: ddsScore,
+        bmi: bmi
+    });
+}
+
+// ===== 辅助函数 =====
+function getBMICategory(bmi) {
+    if (bmi < 18.5) return '偏瘦';
+    if (bmi < 24) return '正常';
+    if (bmi < 28) return '超重';
+    return '肥胖';
+}
+
+function assessDietQuality(ddsScore, breakfastItems, mealsPerDay, eatOut, snacks, water) {
+    let score = 0;
+
+    // 饮食多样性(满分50分)
+    score += ddsScore * 3;
+
+    // 早餐质量(满分15分)
+    if (breakfastItems.includes('protein')) score += 5;
+    if (breakfastItems.includes('wholeGrain')) score += 5;
+    if (breakfastItems.includes('fruit') || breakfastItems.includes('vegetable')) score += 5;
+
+    // 饮食习惯(满分35分)
+    score += (3 - mealsPerDay) * 5; // 3餐为满分
+    score += (3 - eatOut) * 5;
+    score += (3 - snacks) * 5;
+    score += water * 5;
+
+    return {
+        total: score,
+        percent: Math.min(100, Math.round(score / 100 * 100))
+    };
+}
+
+function getDDSEvaluation(score) {
+    if (score >= 12) return '优秀！您的饮食种类非常丰富';
+    if (score >= 8) return '良好，可以增加一些食物种类';
+    if (score >= 5) return '一般，建议增加更多种类的健康食物';
+    return '较差，您的饮食种类过于单一';
+}
+
+function generateDietAnalysis(breakfastItems, mealsPerDay, eatOut, snacks, water) {
+    let analysis = '<ul>';
+
+    // 早餐分析
+    if (breakfastItems.length === 0) {
+        analysis += '<li>❌ 您经常不吃早餐，这是不健康的习惯</li>';
+    } else {
+        analysis += '<li>✅ 早餐包含：' + breakfastItems.map(item => {
+            const names = {
+                'protein': '蛋白质',
+                'wholeGrain': '全谷物',
+                'fruit': '水果',
+                'vegetable': '蔬菜'
+            };
+            return names[item];
+        }).join('、') + '</li>';
+
+        if (!breakfastItems.includes('protein')) {
+            analysis += '<li>❌ 早餐缺乏蛋白质，建议增加蛋/奶/豆制品</li>';
+        }
+    }
+
+    // 进餐频率
+    if (mealsPerDay === 1) {
+        analysis += '<li>❌ 您每天吃1-2餐，可能导致暴饮暴食</li>';
+    } else if (mealsPerDay === 3) {
+        analysis += '<li>✅ 规律的三餐习惯很好</li>';
+    } else {
+        analysis += '<li>👍 三餐加健康加餐是理想模式</li>';
+    }
+
+    // 外卖和零食
+    if (eatOut >= 2) {
+        analysis += `<li>⚠️ 您外出就餐较频繁(每周${eatOut}次)，注意控制油盐摄入</li>`;
+    }
+
+    if (snacks >= 2) {
+        analysis += `<li>⚠️ 零食摄入较多(每周${snacks}次)，建议选择坚果/酸奶替代甜食</li>`;
+    }
+
+    // 饮水
+    if (water <= 1) {
+        analysis += '<li>❌ 饮水不足，可能影响代谢和认知功能</li>';
+    } else if (water >= 2) {
+        analysis += '<li>✅ 良好的饮水习惯</li>';
+    }
+
+    analysis += '</ul>';
+    return analysis;
+}
+
+function generateDietRecommendations(ddsScore, bmiCategory, breakfastItems, eatOut, snacks, water) {
+    let rec = '<ul>';
+
+    // 根据BMI的建议
+    if (bmiCategory === '偏瘦') {
+        rec += '<li>增加健康热量摄入：坚果、鳄梨、橄榄油等</li>';
+    } else if (bmiCategory === '超重' || bmiCategory === '肥胖') {
+        rec += '<li>控制精制碳水：减少白米白面，增加全谷物和蔬菜</li>';
+    }
+
+    // 饮食多样性建议
+    if (ddsScore < 8) {
+        rec += '<li>每周尝试2种新蔬菜和1种新水果</li>';
+        rec += '<li>蛋白质来源多样化：鱼、豆、蛋、瘦肉轮换</li>';
+    }
+
+    // 早餐建议
+    if (!breakfastItems.includes('protein')) {
+        rec += '<li>早餐增加：鸡蛋、希腊酸奶或豆制品提供蛋白质</li>';
+    }
+
+    // 其他建议
+    if (eatOut >= 2) {
+        rec += '<li>减少外卖：每周自备午餐3-4天</li>';
+    }
+
+    if (snacks >= 2) {
+        rec += '<li>健康零食：选择坚果、水果代替甜点</li>';
+    }
+
+    if (water <= 1) {
+        rec += '<li>增加饮水量：每天至少8杯水（约2000ml）</li>';
+    }
+
+    rec += '</ul>';
+    return rec;
+}
+
+function generateMealPlan(bmiCategory, activity, gender, age) {
+    let plan = '<p><strong>基础饮食建议：</strong></p><ul>';
+
+    // 根据BMI提供建议
+    switch(bmiCategory) {
+        case '偏瘦':
+            plan += '<li>每日5-6餐，增加健康热量来源</li>';
+            plan += '<li>餐间加餐：坚果、奶酪、水果</li>';
+            break;
+        case '正常':
+            plan += '<li>均衡三餐，适量加餐</li>';
+            plan += '<li>保持食物多样性，每天12种以上食材</li>';
+            break;
+        default: // 超重或肥胖
+            plan += '<li>控制总热量，增加膳食纤维</li>';
+            plan += '<li>采用211餐盘法：2份蔬菜+1份蛋白质+1份主食</li>';
+    }
+
+    // 根据活动水平
+    if (activity === 'sedentary') {
+        plan += '<li>控制精制碳水，增加优质蛋白比例</li>';
+    } else if (activity === 'moderate' || activity === 'active') {
+        plan += '<li>运动前后补充适量碳水+蛋白（如香蕉+酸奶）</li>';
+    }
+
+    // 根据年龄和性别
+    if (age > 50) {
+        plan += '<li>增加钙和维生素D摄入：奶制品、鱼类</li>';
+    }
+    if (gender === 'female') {
+        plan += '<li>保证足够的铁摄入：红肉、菠菜、豆类</li>';
+    }
+
+    plan += '</ul>';
+
+    // 添加示例餐单
+    plan += `
+        <p><strong>示例一日餐单：</strong></p>
+        <ul>
+            <li>早餐：全麦面包2片 + 鸡蛋1个 + 牛奶200ml + 苹果半个</li>
+            <li>午餐：糙米饭1碗 + 清蒸鱼150g + 炒时蔬200g</li>
+            <li>加餐：希腊酸奶100g + 坚果15g</li>
+            <li>晚餐：杂粮饭3/4碗 + 鸡胸肉100g + 蔬菜沙拉200g</li>
+        </ul>
+    `;
+
+    return plan;
+}
+
+
+
+    // 用户ID生成与初始化
+let userId = localStorage.getItem('healthUserId');
+if (!userId) {
+  userId = 'user_' + Date.now();
+  localStorage.setItem('healthUserId', userId);
+}
+
+// 数据结构
+let healthData = JSON.parse(localStorage.getItem('healthData')) || {
+  userId: userId,
+  reports: []
+};
+
+// 保存报告函数
+function saveReport(type, score, details) {
+  healthData.reports.push({
+    type,
+    score,
+    details,
+    timestamp: new Date().toISOString()
+  });
+  localStorage.setItem('healthData', JSON.stringify(healthData));
+}
+
+
+
+    // 加载历史记录
+function loadReports() {
+  const reports = healthData.reports;
+  const container = document.getElementById('reports-list');
+
+  if (reports.length === 0) {
+    container.innerHTML = '<p>暂无历史记录</p>';
+    return;
+  }
+
+  let html = reports.map(report => `
+    <div class="report-item">
+      <h3>${getReportName(report.type)}</h3>
+      <p>得分: ${report.score.toFixed(1)}</p>
+      <p>时间: ${new Date(report.timestamp).toLocaleString()}</p>
+    </div>
+  `).join('');
+
+  container.innerHTML = html;
+}
+
+// 综合评级计算
+function calculateOverallRating() {
+  const scores = {
+    'blood-sugar': 0.2,
+    'bmi': 0.2,
+    'sleep': 0.15,
+    'exercise': 0.15,
+    'diet': 0.15,
+    'mental': 0.15
+  };
+
+  let total = 0;
+  let count = 0;
+
+  healthData.reports.forEach(report => {
+    if (scores[report.type]) {
+      total += report.score * scores[report.type];
+      count += scores[report.type];
+    }
+  });
+
+  const overallScore = count > 0 ? total / count : 0;
+  const rating = getRatingLevel(overallScore);
+
+  document.getElementById('overall-rating').innerHTML = `
+    <div class="result">
+      <h2>综合得分: ${overallScore.toFixed(1)}</h2>
+      <h3>评级: ${rating}</h3>
+    </div>
+  `;
+}
+
+// 辅助函数
+function getReportName(type) {
+  const names = {
+    'blood-sugar': '血糖检测',
+    'bmi': 'BMI计算',
+    'sleep': '睡眠质量',
+    'exercise': '运动水平',
+    'diet': '饮食健康',
+    'mental': '心理健康'
+  };
+  return names[type] || type;
+}
+
+function getRatingLevel(score) {
+  if (score >= 90) return '优秀';
+  if (score >= 80) return '良好';
+  if (score >= 70) return '中等';
+  if (score >= 60) return '一般';
+  return '需要改善';
+}
+
+// 数据导出功能
+function exportData() {
+  const dataStr = JSON.stringify(healthData);
+  const blob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `health-report-${userId}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+
+// 加载历史记录
+function loadReports() {
+  const container = document.getElementById('reports-list');
+  const reports = healthData.reports;
+
+  if (!reports || reports.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-file-alt"></i>
+        <h3>暂无测评记录</h3>
+        <p>完成测评后，您的记录将显示在这里</p>
+      </div>
+    `;
+    return;
+  }
+
+  // 按时间倒序排序
+  const sortedReports = [...reports].sort((a, b) =>
+    new Date(b.timestamp) - new Date(a.timestamp)
+  );
+
+  container.innerHTML = sortedReports.map(report => {
+    const date = new Date(report.timestamp);
+    const typeName = getReportName(report.type);
+
+    return `
+      <div class="report-item">
+        <div class="report-header">
+          <div class="report-title">${typeName}</div>
+          <div class="report-score">${report.score.toFixed(0)}</div>
+        </div>
+
+        <div class="report-time">${date.toLocaleString()}</div>
+
+        <div class="report-details">
+          ${renderReportDetails(report)}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// 渲染报告详情
+function renderReportDetails(report) {
+  switch(report.type) {
+    case 'blood-sugar':
+      return `
+        <div class="detail-item">
+          <div class="detail-label">血糖值</div>
+          <div class="detail-value">${report.details.value.toFixed(1)} mmol/L</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">测量时间</div>
+          <div class="detail-value">${report.details.time === 'fasting' ? '空腹' : '餐后'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">状态</div>
+          <div class="detail-value">${report.details.isNormal ? '正常' : '异常'}</div>
+        </div>
+      `;
+
+    case 'bmi':
+      return `
+        <div class="detail-item">
+          <div class="detail-label">身高</div>
+          <div class="detail-value">${report.details.height} cm</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">体重</div>
+          <div class="detail-value">${report.details.weight} kg</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">BMI</div>
+          <div class="detail-value">${report.details.bmi.toFixed(1)}</div>
+        </div>
+      `;
+
+    // 其他类型的报告详情类似处理...
+    default:
+      return '';
+  }
+}
+
+
+
+</script>
+</body>
+</html>
